@@ -18,7 +18,9 @@ function onSubmit(e) {
     
     axios.post("http://localhost:3000/user/signup",myobj)
     .then((res)=>{
-      
+      if(res.data.Email==='exist'){
+        alert("Email already exist");
+      }
     }).catch((err)=>{
      console.log(err);
     })
