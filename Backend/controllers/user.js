@@ -1,12 +1,23 @@
 const User=require('../models/user');
 const bcrypt=require('bcrypt');
 
+function isstringinvalid(string){
+    if(string==undefined||string.length==0){
+        return true;
+    }
+    return false;
+}
+
 exports.postAddUser=async(req,res,next)=>{
     try{
    const name=req.body.name;
    const email=req.body.email;
    const password=req.body.password;
    
+   if(isstringinvalid(name)||isstringinvalid(email)||isstringinvalid(password)){
+   return res.status(400).json({message:"Something is missing"});
+   }
+
    const emailExists = await User.findOne({ where: { email: email } });
    if (emailExists ) {
     return res.send({Email:"exist"});
@@ -29,6 +40,10 @@ exports.postLoginUser=async(req,res,next)=>{
         const email=req.body.email;
         const password=req.body.password;
         
+        if(isstringinvalid(email)||isstringinvalid(password)){
+            res.status(400).json({message:"Something is missing"});
+           }
+
         const emailExists = await User.findOne({ where: { email: email } });
         if (emailExists) {
             bcrypt.compare(password,emailExists.dataValues.password,(err,result)=>{

@@ -21,6 +21,8 @@ function onSubmit(e) {
       if(res.data.Email==='exist'){
         alert("Email already exist");
       }
+        window.location.href='./login.html';
+      
     }).catch((err)=>{
      console.log(err);
     })

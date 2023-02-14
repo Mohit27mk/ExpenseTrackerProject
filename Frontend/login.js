@@ -18,6 +18,7 @@ function onSubmit(e) {
     .then((res)=>{
       if(res.data.login==='Login succesful'){
         alert("Login succesful");
+        window.location.href='./expense.html';
       }
     }).catch((err)=>{
      console.log(err);
