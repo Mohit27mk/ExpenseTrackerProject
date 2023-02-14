@@ -1,5 +1,5 @@
 const User=require('../models/user');
-
+const bcrypt=require('bcrypt');
 
 exports.postAddUser=async(req,res,next)=>{
     try{
@@ -11,9 +11,14 @@ exports.postAddUser=async(req,res,next)=>{
    if (emailExists ) {
     return res.send({Email:"exist"});
    }
-   const data=await User.create({name:name,email:email,password:password})
-   res.status(201).json({userDetails:data});
-   
+
+      bcrypt.hash(password,10,async(err,hash)=>{
+       if(err){
+        throw new Error();
+       }
+       const data=await User.create({name:name,email:email,password:hash})
+       res.status(201).json({userDetails:data});
+      });       
 }catch(err){
         console.log(err);
     }
@@ -26,17 +31,21 @@ exports.postLoginUser=async(req,res,next)=>{
         
         const emailExists = await User.findOne({ where: { email: email } });
         if (emailExists) {
-        if(emailExists.dataValues.password==password){
-            res.status(201).json({login:"Login succesful"});   
-        }else{
-            res.status(401).json({login:"User not authorized"});   
-        }
- 
+            bcrypt.compare(password,emailExists.dataValues.password,(err,result)=>{
+                if(err){
+                    throw new Error("User not authorized");
+                }
+                if(result===true){
+                    res.status(201).json({login:"Login succesful"});   
+                }else{
+                    res.status(400).json({message:"password is incorrect"});
+                }
+            })
         }else{
             res.status(404).json({login:"User not found)"}); 
         }
       
      }catch(err){
-             console.log(err);
+             res.status(500).json({message:err});
          }
 };
