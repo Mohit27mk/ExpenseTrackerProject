@@ -16,10 +16,8 @@ function onSubmit(e) {
     
     axios.post("http://localhost:3000/user/login",myobj)
     .then((res)=>{
-      if(res.data.Email==='notExist'){
-        alert("Create Account");
-      }else if(res.data.Password=='wrong'){
-        alert("wrong credentials");
+      if(res.data.login==='Login succesful'){
+        alert("Login succesful");
       }
     }).catch((err)=>{
      console.log(err);
