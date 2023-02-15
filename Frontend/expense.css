@@ -72,6 +72,19 @@
     background: #444;
   }
   
+  .btn1{
+    padding: 10px 15px;
+    border: 0;
+    background: #333;
+    color: #fff;
+    border-radius: 5px;
+    margin: 5px 0;
+  }
+
+  .btn1:hover {
+    background: #444;
+  }
+
   .bg-dark {
     background: #333;
     color: #fff;
