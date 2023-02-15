@@ -1,5 +1,6 @@
 const User=require('../models/user');
 const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
 
 function isstringinvalid(string){
     if(string==undefined||string.length==0){
@@ -35,6 +36,10 @@ exports.postAddUser=async(req,res,next)=>{
     }
 }
 
+function generateAccessToken(id,name){
+    return jwt.sign({userId:id,name:name},'secretkey');
+}
+
 exports.postLoginUser=async(req,res,next)=>{
     try{
         const email=req.body.email;
@@ -51,7 +56,7 @@ exports.postLoginUser=async(req,res,next)=>{
                     throw new Error("User not authorized");
                 }
                 if(result===true){
-                    res.status(201).json({login:"Login succesful"});   
+                    res.status(201).json({login:"Login succesful",token:generateAccessToken(emailExists.id,emailExists.name)});   
                 }else{
                     res.status(400).json({message:"password is incorrect"});
                 }

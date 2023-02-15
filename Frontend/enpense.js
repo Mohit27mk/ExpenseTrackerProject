@@ -11,12 +11,13 @@ function onSubmit(e) {
   const price=e.target.price.value;
   const description=e.target.description.value;
   const category=e.target.category.value;
+  const token= localStorage.getItem('token');
 
     const myobj={
        price,description,category
     }
     
-    axios.post("http://localhost:3000/expense/add-expense",myobj)
+    axios.post("http://localhost:3000/expense/add-expense",myobj,{ headers: {"Authorization":token} })
     .then((res)=>{
         console.log(res);
         showExpense(res.data.expenseDetails);
@@ -31,7 +32,8 @@ function onSubmit(e) {
 }
 
 window.addEventListener("DOMContentLoaded",()=>{
-    axios.get("http://localhost:3000/expense/get-expenses")
+    const token=localStorage.getItem('token');
+    axios.get("http://localhost:3000/expense/get-expenses",{ headers: {"Authorization":token} })
     .then((res)=>{
       
       for(var i=0;i<res.data.allExpense.length;i++){
@@ -61,10 +63,11 @@ editBtn.appendChild(document.createTextNode('edit'));
     li.appendChild(editBtn);
     deleteBtn.onclick=()=>{
         userList.removeChild(li);
-        axios.delete(`http://localhost:3000/expense/delete-expense/${myobj.id}`)
+        const token=localStorage.getItem('token');
+        axios.delete(`http://localhost:3000/expense/delete-expense/${myobj.id}`,{ headers: {"Authorization":token} });
     } 
     editBtn.onclick=()=>{ 
-        axios.delete(`http://localhost:3000/expense/delete-expense/${myobj.id}`)
+        axios.delete(`http://localhost:3000/expense/delete-expense/${myobj.id}`,{ headers: {"Authorization":token} });
         userList.removeChild(li);
         expenseInput.value = myobj.price;
     descriptionInput.value = myobj.description;

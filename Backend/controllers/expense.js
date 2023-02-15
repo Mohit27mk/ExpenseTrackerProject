@@ -5,8 +5,8 @@ exports.postAddExpense=async(req,res,next)=>{
    const price=req.body.price;
    const description=req.body.description;
    const category=req.body.category;
-   
-   const data=await Expense.create({price:price,description:description,category:category})
+   const userId=req.user.id;
+   const data=await Expense.create({price:price,description:description,category:category,userId:userId})
    res.status(201).json({expenseDetails:data});   
 }catch(err){
         console.log(err);
@@ -15,7 +15,7 @@ exports.postAddExpense=async(req,res,next)=>{
 
 exports.getExpenses=async(req,res,next)=>{
     try{
-    const expenses=await Expense.findAll();
+    const expenses=await Expense.findAll({where:{userId:req.user.id}});
     res.status(200).json({allExpense:expenses});
     }catch(err){
         console.log(err);
@@ -25,8 +25,7 @@ exports.getExpenses=async(req,res,next)=>{
    exports.deleteExpense=async(req,res,next)=>{
       try{
         const uId=req.params.id;
-      
-       await Expense.destroy({where:{id:uId}});
+       await Expense.destroy({where:{id:uId,userId:req.user.id}});
        res.sendStatus(200);
      
     }
@@ -35,4 +34,3 @@ exports.getExpenses=async(req,res,next)=>{
        }
    }
 
-//    9347633052
