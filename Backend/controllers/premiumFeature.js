@@ -5,25 +5,19 @@ const sequelize=require('../util/database');
 
 const getLeaderUserBoard=async(req,res)=>{
 try{
-   const users=await User.findAll();
-   const expenses=await  Expense.findAll();
-   const userAggregatedExpenses={};
-   expenses.forEach((expense)=>{
-    if(userAggregatedExpenses[expense.userId])
-    userAggregatedExpenses[expense.userId]=userAggregatedExpenses[expense.userId]+expense.price;
-    else{
-        userAggregatedExpenses[expense.userId]=expense.price;
-    }
-   })
-  var userLeaderBoardDetails=[];
-   users.forEach((user)=>{
-userLeaderBoardDetails.push({name:user.name,total_cost:userAggregatedExpenses[user.id]||0})
-   })
-
-   userLeaderBoardDetails.sort((a,b)=>{
-          return b.total_cost-a.total_cost
-   })
-   res.status(200).json(userLeaderBoardDetails);
+   const leaderBoardofusers=await User.findAll({
+    attributes:['id','name',[sequelize.fn('sum',sequelize.col('expenses.price')),'total_cost']],
+   include:[
+      {
+        model:Expense,
+        attributes:[]
+      }
+   ],
+   group:['user.id'],
+   order:[[sequelize.col('total_cost'),"DESC"]]  
+});
+   
+   res.status(200).json(leaderBoardofusers);
 
 }catch(err){
     console.log(err);
