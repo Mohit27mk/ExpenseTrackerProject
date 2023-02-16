@@ -157,7 +157,7 @@ sendGetRequest();
       
       userLeaderBoardArray.data.forEach((userDetails)=>{
         const li = document.createElement('li');
-        li.appendChild(document.createTextNode(`Name- ${userDetails.name} Total Expense- ${userDetails.total_cost}`));
+        li.appendChild(document.createTextNode(`Name- ${userDetails.name} Total Expense- ${userDetails.totalexpense}`));
         leaderboardElement.appendChild(li);
       })
      } 
