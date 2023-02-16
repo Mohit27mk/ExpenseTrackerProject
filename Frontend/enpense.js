@@ -2,6 +2,7 @@ const myForm=document.querySelector('#my-form');
 const expenseInput = document.querySelector('#price');
 const descriptionInput = document.querySelector('#description');
 const categoryInput = document.querySelector('#category');
+const showLeaderboard=document.createElement('button');
 
 myForm.addEventListener('submit', onSubmit);
 
@@ -92,7 +93,19 @@ payment_id:response.razorpay_payment_id,
 status1:true
   },
   {headers:{"Authorization":token}})
+  if(response.data.ispremiumuser){
+    const header1 = document.querySelector('.head');
+    const h1 = document.createElement('h1');
+    h1.appendChild(document.createTextNode('You are a Premium User'));
+    header1.appendChild(h1);
+  const premiumButton=  document.getElementById('rzp-button1');
+  premiumButton.style.display = 'none';
+  showLeaderboard.className='btn btn-danger btn-sm  delete';
+  showLeaderboard.appendChild(document.createTextNode('showLeaderbord'));
+  header1.appendChild(showLeaderboard); 
+}
   alert('You are premium user now')
+  
 }
 };
 const rzp1=new Razorpay(options);
@@ -108,3 +121,43 @@ rzp1.on('payment.failed',async function(response){
 alert('Something went wrong');
 })
 }
+
+window.addEventListener("DOMContentLoaded",()=>{
+  const sendGetRequest = async () => {
+    try {
+      const token=localStorage.getItem('token');
+      const response=await axios.get('http://localhost:3000/purchase/premiummembership',{headers:{"Authorization":token}});
+      console.log(response);
+      if(response.data.ispremiumuser){
+        const header1 = document.querySelector('.head');
+        const h1 = document.createElement('h1');
+        h1.appendChild(document.createTextNode('You are a Premium User'));
+        header1.appendChild(h1);
+      const premiumButton=  document.getElementById('rzp-button1');
+      premiumButton.style.display = 'none';
+      showLeaderboard.className='btn1 btn-danger btn-sm  ';
+      showLeaderboard.appendChild(document.createTextNode('showLeaderbord'));
+      header1.appendChild(showLeaderboard);  
+    }
+    } catch (err) {
+        // Handle Error Here
+        console.error(err);
+    }
+};
+
+sendGetRequest();
+      });
+
+     showLeaderboard.onclick=async()=>{
+      const token=localStorage.getItem('token');
+      const userLeaderBoardArray=await axios.get('http://localhost:3000/premium/showLeaderBoard',{headers:{"Authorization":token}});
+      
+      var leaderboardElement=document.getElementById('leaderboard');
+      
+      
+      userLeaderBoardArray.data.forEach((userDetails)=>{
+        const li = document.createElement('li');
+        li.appendChild(document.createTextNode(`Name- ${userDetails.name} Total Expense- ${userDetails.total_cost}`));
+        leaderboardElement.appendChild(li);
+      })
+     } 
