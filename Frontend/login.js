@@ -1,8 +1,8 @@
-const signupForm=document.querySelector('#login-form');
+const loginForm=document.querySelector('#login-form');
 const emailInput = document.querySelector('#email');
 const passwordInput = document.querySelector('#password');
 
-signupForm.addEventListener('submit', onSubmit);
+loginForm.addEventListener('submit', onSubmit);
 
 function onSubmit(e) {
   e.preventDefault();
