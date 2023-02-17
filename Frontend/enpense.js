@@ -3,6 +3,8 @@ const expenseInput = document.querySelector('#price');
 const descriptionInput = document.querySelector('#description');
 const categoryInput = document.querySelector('#category');
 const showLeaderboard=document.createElement('button');
+const downloadexpense=document.createElement('button');
+
 
 myForm.addEventListener('submit', onSubmit);
 
@@ -138,6 +140,9 @@ window.addEventListener("DOMContentLoaded",()=>{
       showLeaderboard.className='btn1 btn-danger btn-sm  ';
       showLeaderboard.appendChild(document.createTextNode('showLeaderbord'));
       header1.appendChild(showLeaderboard);  
+      downloadexpense.className='btn1 btn-danger btn-sm  ';
+      downloadexpense.appendChild(document.createTextNode('downloadexpense'));
+      header1.appendChild(downloadexpense);  
     }
     } catch (err) {
         // Handle Error Here
@@ -161,3 +166,10 @@ sendGetRequest();
         leaderboardElement.appendChild(li);
       })
      } 
+
+     downloadexpense.onclick=async()=>{
+      const userType = localStorage.getItem('user')
+      
+          window.location.href = './report.html'
+    
+  }
