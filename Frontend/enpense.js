@@ -39,20 +39,82 @@ function onSubmit(e) {
 
 window.addEventListener("DOMContentLoaded",()=>{
     const token=localStorage.getItem('token');
-    axios.get("http://localhost:3000/expense/get-expenses",{ headers: {"Authorization":token} })
+    let page = 1;
+    axios.get(`http://localhost:3000/expense/get-expenses/${page}`,{ headers: {"Authorization":token} })
     .then((res)=>{
-      
-      for(var i=0;i<res.data.allExpense.length;i++){
-        showExpense(res.data.allExpense[i]);
+     
+      for(var i=0;i<res.data.data.length;i++){
+        showExpense(res.data.data[i]);
       }
+      showPagination(res.data.info);
     }).catch((err)=>{
       console.log(err);
     })
    })
 
+   function showPagination({currentPage,hasNextPage,hasPreviousPage,nextPage,previousPage,lastPage}){
+    let page = 1;
+    const pagination = document.getElementById('pagination')
+
+    pagination.innerHTML = '';
+
+    if(hasPreviousPage){
+        const button1 = document.createElement('button');
+        button1.className='btn btn-danger btn-sm  delete';
+        button1.innerHTML = previousPage ;
+        button1.addEventListener('click' , ()=>getPageExpenses(previousPage))
+        pagination.appendChild(button1)
+    }
+
+    const button2 = document.createElement('button');
+    button2.className='btn btn-danger btn-sm  delete';
+    button2.classList.add('active')
+    button2.innerHTML = currentPage ;
+    button2.addEventListener('click' , ()=>getPageExpenses(currentPage))
+    pagination.appendChild(button2)
+
+    if(hasNextPage){
+        const button3 = document.createElement('button');
+        button3.className='btn btn-danger btn-sm  delete';
+        button3.innerHTML = nextPage ;
+        button3.addEventListener('click' , ()=>getPageExpenses(nextPage))
+        pagination.appendChild(button3)
+    }
+
+    if( currentPage!=lastPage && nextPage!=lastPage && lastPage != 0){
+        const button3 = document.createElement('button');
+        button3.className='btn btn-danger btn-sm  delete';
+        button3.innerHTML = lastPage ;
+        
+        button3.addEventListener('click' , ()=>getPageExpenses(lastPage))
+        pagination.appendChild(button3)
+    }
+}
+
+async function getPageExpenses(page){
+
+
+  const token = localStorage.getItem('token')
+  const userList = document.querySelector('#users');
+  let response = await axios.get(`http://localhost:3000/expense/get-expenses/${page}`,{headers: { "Authorization": token}} )
+  
+
+  console.log(response.data.info);
+  if(response.status === 200){
+    userList.innerHTML=''
+      for(let i=0;i<response.data.data.length;i++){
+          showExpense(response.data.data[i]);
+      }
+
+  }
+
+  showPagination(response.data.info)
+}
+
+
 function showExpense(myobj){
     const userList = document.querySelector('#users');
-
+   
     const li = document.createElement('li');
 
     // Add text node with input values
