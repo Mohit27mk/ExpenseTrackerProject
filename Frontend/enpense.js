@@ -4,8 +4,11 @@ const descriptionInput = document.querySelector('#description');
 const categoryInput = document.querySelector('#category');
 const showLeaderboard=document.createElement('button');
 const downloadexpense=document.createElement('button');
-
-
+downloadexpense.className='btn1 btn-danger btn-sm  ';
+const header1 = document.querySelector('.head');
+      downloadexpense.appendChild(document.createTextNode('downloadexpense'));
+      header1.appendChild(downloadexpense);  
+    downloadexpense.disabled=true;
 myForm.addEventListener('submit', onSubmit);
 
 function onSubmit(e) {
@@ -105,6 +108,7 @@ status1:true
   showLeaderboard.className='btn btn-danger btn-sm  delete';
   showLeaderboard.appendChild(document.createTextNode('showLeaderbord'));
   header1.appendChild(showLeaderboard); 
+  downloadexpense.disabled=false;
 }
   alert('You are premium user now')
   
@@ -140,9 +144,7 @@ window.addEventListener("DOMContentLoaded",()=>{
       showLeaderboard.className='btn1 btn-danger btn-sm  ';
       showLeaderboard.appendChild(document.createTextNode('showLeaderbord'));
       header1.appendChild(showLeaderboard);  
-      downloadexpense.className='btn1 btn-danger btn-sm  ';
-      downloadexpense.appendChild(document.createTextNode('downloadexpense'));
-      header1.appendChild(downloadexpense);  
+      downloadexpense.disabled=false;
     }
     } catch (err) {
         // Handle Error Here

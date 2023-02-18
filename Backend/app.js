@@ -12,6 +12,8 @@ app.use(cors());
 const Expense=require('./models/expense');
 const User=require('./models/user');
 const ForgotPassword = require('./models/forgotpassword');
+const DownloadUrl = require('./models/downloadUrl');
+
 
 const userRoutes=require('./routes/user');
 const expenseRoutes=require('./routes/expense');
@@ -38,6 +40,9 @@ Order.belongsTo(User);
 
 User.hasMany(ForgotPassword);
 ForgotPassword.belongsTo(User);
+
+User.hasMany(DownloadUrl)
+DownloadUrl.belongsTo(User)
 
 require('dotenv').config();
 
