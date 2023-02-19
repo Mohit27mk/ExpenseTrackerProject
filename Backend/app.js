@@ -1,13 +1,22 @@
 const express=require('express');
 const bodyParser = require('body-parser');
-
+const helmet=require('helmet');
+const morgan=require('morgan');
+const fs=require('fs');
+const path=require('path');
 
 const sequelize=require('./util/database');
 
 var cors=require('cors');
 const app=express();
 
+const accessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),
+{flag:'a'}
+);
+
 app.use(cors());
+app.use(helmet());
+app.use(morgan('combined',{stream:accessLogStream}));
 
 const Expense=require('./models/expense');
 const User=require('./models/user');
@@ -48,7 +57,7 @@ require('dotenv').config();
 
 sequelize.sync()
 .then(result=>{
-    app.listen(3000);
+    app.listen(process.env.PORT);
 }).catch(err=>{
     console.log(err);
 });
