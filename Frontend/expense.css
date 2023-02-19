@@ -35,6 +35,12 @@
     overflow: auto;
     padding: 3rem 2rem;
   }
+
+  .page{ 
+    margin-left: 470px;
+    width: 150px;
+  }
+  
   
   #my-form {
     padding: 2rem;

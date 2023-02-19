@@ -11,6 +11,16 @@ const header1 = document.querySelector('.head');
     downloadexpense.disabled=true;
 myForm.addEventListener('submit', onSubmit);
 
+const perpage=document.querySelector('#perpage');
+perpage.addEventListener('submit', onSub);
+
+function onSub(e){
+  e.preventDefault();
+  const Items_Per_Page=e.target.Items_Per_Page.value;
+  localStorage.setItem('Items_Per_Page',Items_Per_Page);
+  
+}
+
 function onSubmit(e) {
   e.preventDefault();
   
@@ -34,13 +44,13 @@ function onSubmit(e) {
     descriptionInput.value = '';
     categoryInput.value=1;
     
-   
 }
 
 window.addEventListener("DOMContentLoaded",()=>{
     const token=localStorage.getItem('token');
     let page = 1;
-    axios.get(`http://localhost:3000/expense/get-expenses/${page}`,{ headers: {"Authorization":token} })
+    const Items_Per_Page=localStorage.getItem('Items_Per_Page');
+    axios.get(`http://localhost:3000/expense/get-expenses/${page}/${Items_Per_Page}`,{ headers: {"Authorization":token} })
     .then((res)=>{
      
       for(var i=0;i<res.data.data.length;i++){
@@ -96,7 +106,8 @@ async function getPageExpenses(page){
 
   const token = localStorage.getItem('token')
   const userList = document.querySelector('#users');
-  let response = await axios.get(`http://localhost:3000/expense/get-expenses/${page}`,{headers: { "Authorization": token}} )
+  const Items_Per_Page=localStorage.getItem('Items_Per_Page');
+  let response = await axios.get(`http://localhost:3000/expense/get-expenses/${page}/${Items_Per_Page}`,{headers: { "Authorization": token}} )
   
 
   console.log(response.data.info);

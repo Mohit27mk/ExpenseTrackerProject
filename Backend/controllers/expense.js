@@ -69,8 +69,9 @@ exports.postAddExpense=async(req,res,next)=>{
 exports.getExpenses=async(req,res,next)=>{
     try{
         let page = req.params.page || 1;
-    let Items_Per_Page = 2;
-
+    let Items_Per_Page = +(req.params.Items_Per_Page);
+    console.log(page);
+    console.log(Items_Per_Page);
     let totalItems;
     let count = await Expense.count({where: {userId:req.user.id}})
     totalItems = count;
