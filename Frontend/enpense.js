@@ -35,7 +35,7 @@ function onSubmit(e) {
     
     axios.post("http://localhost:3000/expense/add-expense",myobj,{ headers: {"Authorization":token} })
     .then((res)=>{
-        console.log(res);
+        // console.log(res);
         showExpense(res.data.expenseDetails);
     }).catch((err)=>{
      console.log(err);
@@ -49,7 +49,7 @@ function onSubmit(e) {
 window.addEventListener("DOMContentLoaded",()=>{
     const token=localStorage.getItem('token');
     let page = 1;
-    const Items_Per_Page=localStorage.getItem('Items_Per_Page');
+    const Items_Per_Page=localStorage.getItem('Items_Per_Page')||2;
     axios.get(`http://localhost:3000/expense/get-expenses/${page}/${Items_Per_Page}`,{ headers: {"Authorization":token} })
     .then((res)=>{
      
@@ -106,7 +106,7 @@ async function getPageExpenses(page){
 
   const token = localStorage.getItem('token')
   const userList = document.querySelector('#users');
-  const Items_Per_Page=localStorage.getItem('Items_Per_Page');
+  const Items_Per_Page=localStorage.getItem('Items_Per_Page')||2;
   let response = await axios.get(`http://localhost:3000/expense/get-expenses/${page}/${Items_Per_Page}`,{headers: { "Authorization": token}} )
   
 
@@ -143,10 +143,11 @@ editBtn.appendChild(document.createTextNode('edit'));
     deleteBtn.onclick=()=>{
         userList.removeChild(li);
         const token=localStorage.getItem('token');
-        axios.delete(`http://localhost:3000/expense/delete-expense/${myobj.id}`,{ headers: {"Authorization":token} });
+        axios.delete(`http://localhost:3000/expense/delete-expense/${myobj._id}`,{ headers: {"Authorization":token} });
     } 
     editBtn.onclick=()=>{ 
-        axios.delete(`http://localhost:3000/expense/delete-expense/${myobj.id}`,{ headers: {"Authorization":token} });
+        const token=localStorage.getItem('token');
+        axios.delete(`http://localhost:3000/expense/delete-expense/${myobj._id}`,{ headers: {"Authorization":token} });
         userList.removeChild(li);
         expenseInput.value = myobj.price;
     descriptionInput.value = myobj.description;
@@ -206,7 +207,7 @@ window.addEventListener("DOMContentLoaded",()=>{
     try {
       const token=localStorage.getItem('token');
       const response=await axios.get('http://localhost:3000/purchase/premiummembership',{headers:{"Authorization":token}});
-      console.log(response);
+      // console.log(response);
       if(response.data.ispremiumuser){
         const header1 = document.querySelector('.head');
         const h1 = document.createElement('h1');
@@ -233,11 +234,11 @@ sendGetRequest();
       const userLeaderBoardArray=await axios.get('http://localhost:3000/premium/showLeaderBoard',{headers:{"Authorization":token}});
       
       var leaderboardElement=document.getElementById('leaderboard');
-      
+      leaderboardElement.innerHTML="<h3>User LeaderBoard</h3>";
       
       userLeaderBoardArray.data.forEach((userDetails)=>{
         const li = document.createElement('li');
-        li.appendChild(document.createTextNode(`Name- ${userDetails.name} Total Expense- ${userDetails.totalexpense}`));
+        li.appendChild(document.createTextNode(`Name- ${userDetails.name} Total Expense- ${userDetails.totalExpense}`));
         leaderboardElement.appendChild(li);
       })
      } 

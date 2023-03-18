@@ -16,6 +16,7 @@ function onSubmit(e) {
     
     axios.post("http://localhost:3000/user/login",myobj)
     .then((res)=>{
+      console.log(res.data.token);
       if(res.data.login==='Login succesful'){
         alert("Login succesful");
         localStorage.setItem('token',res.data.token);

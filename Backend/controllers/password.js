@@ -5,20 +5,16 @@ const bcrypt = require('bcrypt');
 const ForgotPassword = require('../models/forgotpassword');
 
 exports.forgotPassword = async (req,res,next) => {
+    try{
     const {email} =req.body ;
 
-    const user = await User.findOne({where:{email}});
+    const user = await User.findOne({email: email});
 
-    const id = uuid.v4();
 
-    console.log(id);
-    console.log(user)
+    const forgotPassword = new ForgotPassword({active:true})
+    forgotPassword.save();
 
-    user.createForgotPassword({id,active:true}).catch(err=>{ throw new Error(err)})
-
-    console.log('into forgot');
-
-    console.log(email);
+    const id = forgotPassword._id;
 
     const client = sib.ApiClient.instance
 
@@ -45,7 +41,7 @@ exports.forgotPassword = async (req,res,next) => {
             email : email,
         },
     ]
-    console.log(recievers);
+    
 
 
     tranEmailApi.sendTransacEmail({
@@ -59,6 +55,9 @@ exports.forgotPassword = async (req,res,next) => {
         //console.log('after transaction');
         return res.status(202).json({sucess: true, message: "password mail sent Successful"});
     }).catch(err=>console.log(err))
+}catch(err){
+    return res.status(500).json({ message: error});
+}
 }
 
 exports.resetPassword = async (req,res,next) => {
@@ -67,19 +66,19 @@ exports.resetPassword = async (req,res,next) => {
 
         let id = req.params.id;
 
-        let forgotpasswordRequest = await ForgotPassword.findOne({where:{id}})
-
+        ForgotPassword.findById(id).then(forgotPassword => {
+            forgotPassword.active = false
+            return forgotPassword.save();
+        })
         if(!forgotpasswordRequest){
             return res.status(404).json({msg: 'User desnt exist'})
         }
-
-        forgotpasswordRequest.update({active:false})
 
         res.status(200).send(`<html>
         <script>
             function formsubmitted(e){
                 e.preventDefault();
-                console.log('called')
+               
             }
         </script>
         <form action="/password/update/${id}" method="get">
